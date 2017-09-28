@@ -1,11 +1,15 @@
 package servlet;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import bean.deletedao;
+import bean.login;
+import bean.register;
 import bean.updatedao;
 import bean.user;
+import bean.userRegister;
 import bean.userdao;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,7 +34,50 @@ public class showuser extends HttpServlet{
     		deletedao.delete(id);
     		response.sendRedirect("showuser");
     		
-    	}else if("update".equals(oprate)) {
+    	}else if("login".equals(oprate)) {
+    		String username = request.getParameter("username");
+     	      String password = request.getParameter("password");
+     	     List<String> info=new ArrayList<String>();  
+     	    if(username==null||"".equals(username)){ 
+     	        info.add("用户名不能为空");  
+     	        System.out.println("用户名不能为空");  
+     	    }  
+     	  
+     	    if(password==null||"".equals(password)){
+     	        info.add("密码不能为空");  
+     	        System.out.println("密码不能为空");  
+     	    }  
+     	    if(info.size()==0){  
+
+
+     	        try {  
+     	              
+     	            if(login.findLogin(username,password)){  
+     	            	request.getRequestDispatcher("index.jsp").forward(request, response);              
+     	            }else {  
+     	                info.add("用户登录失败，错误的用户名和密码");  
+     	            }                         
+     	        } catch (Exception e) {  
+     	            e.printStackTrace();  
+     	        }  
+     	    }  
+     	   request.setAttribute("info", info);
+     	    request.getRequestDispatcher("login.jsp").forward(request,response);  
+    	}
+    	
+    	else if("register".equals(oprate)) {
+   		 String username = request.getParameter("username");
+  	      String password = request.getParameter("password");
+
+
+  	   			register.userregister(username,password);
+
+  	   			request.getRequestDispatcher("regsuccess.jsp").forward(request, response);
+
+   	}
+    	
+    	
+    	else if("update".equals(oprate)) {
     		
     		  request.setCharacterEncoding("utf-8");
     	      
